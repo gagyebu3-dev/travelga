@@ -794,8 +794,8 @@
   /* ---------------- Data layer ---------------- */
   var PALETTE = ['#3B82F6','#0EA5E9','#14B8A6','#10B981','#84CC16','#F59E0B','#F97316','#EF4444','#EC4899','#D946EF','#8B5CF6','#6366F1'];
 
-  var DEFAULT_EXPENSE_CATS = ['국민 자동이체(고정)','국민카드(고정)','관리비','교통비','생활비','차량유지비','영양제','의료비','세금'];
-  var DEFAULT_INCOME_CATS = ['이월금','급여','치안활동비','카드할인','천사지원금 환전'];
+  var DEFAULT_EXPENSE_CATS = ['숙소','식사','간식','교통','놀이','음주','기념','선물','경조사','가족과 식사'];
+  var DEFAULT_INCOME_CATS = ['이월금','성과금','명절휴가비','추가금'];
 
   function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
@@ -823,6 +823,39 @@
   /* ---------------- One-time category migration (v2 default set) ---------------- */
   (function migrateCategoriesV2(){
     var FLAG = 'chibucheck_cat_migration_v2';
+    if(localStorage.getItem(FLAG)) return;
+    localStorage.setItem(FLAG, '1');
+
+    var oldDefaults = state.categories.filter(function(c){ return c.isDefault; });
+    var customCats = state.categories.filter(function(c){ return !c.isDefault; });
+    if(!oldDefaults.length) { save(); return; } // nothing to migrate (fresh install)
+
+    var newDefaults = [];
+    DEFAULT_EXPENSE_CATS.forEach(function(name, i){
+      newDefaults.push({id: uid(), name: name, type: 'expense', color: PALETTE[i % PALETTE.length], isDefault:true});
+    });
+    DEFAULT_INCOME_CATS.forEach(function(name, i){
+      newDefaults.push({id: uid(), name: name, type: 'income', color: PALETTE[i % PALETTE.length], isDefault:true});
+    });
+
+    var firstExpenseId = newDefaults.filter(function(c){return c.type==='expense';})[0].id;
+    var firstIncomeId = newDefaults.filter(function(c){return c.type==='income';})[0].id;
+    var oldDefaultIds = {};
+    oldDefaults.forEach(function(c){ oldDefaultIds[c.id] = c.type; });
+
+    state.transactions.forEach(function(t){
+      if(oldDefaultIds[t.categoryId]){
+        t.categoryId = (t.type === 'income') ? firstIncomeId : firstExpenseId;
+      }
+    });
+
+    state.categories = newDefaults.concat(customCats);
+    save();
+  })();
+
+  /* ---------------- One-time category migration (v3 default set) ---------------- */
+  (function migrateCategoriesV3(){
+    var FLAG = 'chibucheck_cat_migration_v3';
     if(localStorage.getItem(FLAG)) return;
     localStorage.setItem(FLAG, '1');
 
