@@ -1,9 +1,9 @@
-const CACHE_NAME = 'yeohaeng-gagyebu-v2';
+const CACHE_NAME = 'yeohaeng-gagyebu-v3';
 const CORE_ASSETS = [
   './',
-  './manifest.json?v=4',
-  './icons/icon-192.png?v=4',
-  './icons/icon-512.png?v=4'
+  './manifest.json',
+  './icons/icon-192-v5.png',
+  './icons/icon-512-v5.png'
 ];
 
 self.addEventListener('install', (event) => {
