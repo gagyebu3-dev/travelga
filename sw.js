@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yeohaeng-gagyebu-v3';
+const CACHE_NAME = 'yeohaeng-gagyebu-v4';
 const CORE_ASSETS = [
   './',
   './manifest.json',

@@ -800,7 +800,7 @@
   function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
   function loadState(){
-    var raw = localStorage.getItem('chibucheck_data_v1');
+    var raw = localStorage.getItem('travelbucheck_data_v1');
     if(raw){
       try{ return JSON.parse(raw); }catch(e){}
     }
@@ -817,12 +817,12 @@
   var state = loadState();
 
   function save(){
-    localStorage.setItem('chibucheck_data_v1', JSON.stringify(state));
+    localStorage.setItem('travelbucheck_data_v1', JSON.stringify(state));
   }
 
   /* ---------------- One-time category migration (v2 default set) ---------------- */
   (function migrateCategoriesV2(){
-    var FLAG = 'chibucheck_cat_migration_v2';
+    var FLAG = 'travelbucheck_cat_migration_v2';
     if(localStorage.getItem(FLAG)) return;
     localStorage.setItem(FLAG, '1');
 
@@ -855,7 +855,7 @@
 
   /* ---------------- One-time category migration (v3 default set) ---------------- */
   (function migrateCategoriesV3(){
-    var FLAG = 'chibucheck_cat_migration_v3';
+    var FLAG = 'travelbucheck_cat_migration_v3';
     if(localStorage.getItem(FLAG)) return;
     localStorage.setItem(FLAG, '1');
 
@@ -1579,7 +1579,7 @@
   document.getElementById('resetBtn').addEventListener('click', function(){
     if(!confirm('모든 기록과 카테고리가 삭제됩니다. 계속할까요?')) return;
     if(!confirm('정말로 초기화할까요? 이 작업은 되돌릴 수 없어요.')) return;
-    localStorage.removeItem('chibucheck_data_v1');
+    localStorage.removeItem('travelbucheck_data_v1');
     state = loadState();
     save();
     renderHome(); renderSettings();
